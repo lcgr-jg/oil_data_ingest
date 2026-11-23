@@ -1,0 +1,48 @@
+# SunSirs China spot prices — multi-product registry.
+# One landing table for all products; flip enabled or pass --product on the CLI.
+#
+# Unit is not printed on the UK product pages; RMB/mt is the usual SunSirs
+# China commodity convention. Override per product if you learn otherwise.
+
+source: sunsirs
+unit_default: RMB/mt
+
+landing:
+  # Single multi-product series (upsert on source + product + date).
+  prices: data/processed/sunsirs/prices.parquet
+  raw_dir: data/raw/sunsirs
+
+# Energy sector IDs taken from the SunSirs UK product sidebar.
+products:
+  gasoline:
+    id: 437
+    url: https://www.sunsirs.com/uk/prodetail-437.html
+    enabled: true
+  diesel:
+    id: 490
+    url: https://www.sunsirs.com/uk/prodetail-490.html
+    enabled: false
+  fuel_oil:
+    id: 387
+    url: https://www.sunsirs.com/uk/prodetail-387.html
+    enabled: false
+  lpg:
+    id: 158
+    url: https://www.sunsirs.com/uk/prodetail-158.html
+    enabled: false
+  thermal_coal:
+    id: 369
+    url: https://www.sunsirs.com/uk/prodetail-369.html
+    enabled: false
+  coke:
+    id: 346
+    url: https://www.sunsirs.com/uk/prodetail-346.html
+    enabled: false
+  coking_coal:
+    id: 1121
+    url: https://www.sunsirs.com/uk/prodetail-1121.html
+    enabled: false
+  dme:
+    id: 684
+    url: https://www.sunsirs.com/uk/prodetail-684.html
+    enabled: false

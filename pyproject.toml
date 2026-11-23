@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oil-data-ingest"
+version = "0.1.0"
+description = "Desk ingest jobs for public/API energy series (Sunsirs first); apps consume the landing tables"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "requests>=2.31",
+  "beautifulsoup4>=4.12",
+  "lxml>=4.9",
+  "pandas>=2.1",
+  "pyarrow>=14.0",
+  "PyYAML>=6.0",
+  "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+fetch-sunsirs = "oil_data_ingest.cli:main_sunsirs"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["oil_data_ingest*"]
