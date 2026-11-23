@@ -21,15 +21,15 @@ products:
   diesel:
     id: 490
     url: https://www.sunsirs.com/uk/prodetail-490.html
-    enabled: false
+    enabled: true
   fuel_oil:
     id: 387
     url: https://www.sunsirs.com/uk/prodetail-387.html
-    enabled: false
+    enabled: true
   lpg:
     id: 158
     url: https://www.sunsirs.com/uk/prodetail-158.html
-    enabled: false
+    enabled: true
   thermal_coal:
     id: 369
     url: https://www.sunsirs.com/uk/prodetail-369.html

@@ -35,9 +35,9 @@ def main_sunsirs(argv: list[str] | None = None) -> None:
         help="Fetch every product listed in config (ignores enabled flags).",
     )
     parser.add_argument(
-        "--no-raw",
+        "--raw",
         action="store_true",
-        help="Do not write raw HTML under data/raw/sunsirs/",
+        help="Also write raw HTML under data/raw/sunsirs/ (debug only; off by default).",
     )
     args = parser.parse_args(argv)
 
@@ -45,7 +45,7 @@ def main_sunsirs(argv: list[str] | None = None) -> None:
         config_path=args.config,
         products=args.products,
         all_configured=args.all_configured,
-        save_raw=not args.no_raw,
+        save_raw=args.raw,
     )
     print(f"wrote {summary['prices_path']}")
     print(f"rows_total={summary['rows_total']} upsert={summary['upsert']}")

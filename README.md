@@ -15,12 +15,13 @@ pip install -e .
 
 ## SunSirs
 
-Config: `config/sunsirs.yaml` (product registry + landing paths). Only `gasoline` is `enabled: true` initially; flip flags or pass CLI products to expand.
+Config: `config/sunsirs.yaml` (product registry + landing paths). Enabled by default: `gasoline`, `diesel`, `fuel_oil`, `lpg`. Flip flags or pass CLI products to expand.
 
 ```powershell
 python scripts/fetch_sunsirs.py
 python scripts/fetch_sunsirs.py --product gasoline --product diesel
 python scripts/fetch_sunsirs.py --all
+python scripts/fetch_sunsirs.py --raw   # optional: keep HTML under data/raw/ (debug)
 ```
 
 Landing table (all products):
@@ -42,7 +43,7 @@ Landing table (all products):
 
 Upsert key: `(source, product, date)` — re-runs update the same day instead of duplicating.
 
-Raw HTML (optional, on by default): `data/raw/sunsirs/{product}/{timestamp}.html`
+Raw HTML (off by default; `--raw` only): `data/raw/sunsirs/{product}/{timestamp}.html`
 
 ## Scheduling (later)
 

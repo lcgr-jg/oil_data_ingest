@@ -49,10 +49,13 @@ def run_sunsirs_fetch(
     config_path: Path | None = None,
     products: list[str] | None = None,
     all_configured: bool = False,
-    save_raw: bool = True,
+    save_raw: bool = False,
 ) -> dict[str, Any]:
     """
     Fetch selected SunSirs product pages and upsert into one prices table.
+
+    Raw HTML is off by default — the parquet landing table is the durable
+    store. Pass save_raw=True only when debugging parse failures.
 
     Returns a small summary dict for the CLI (paths, per-product row counts).
     """
