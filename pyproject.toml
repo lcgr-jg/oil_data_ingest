@@ -20,9 +20,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
+bloomberg = [
+  # Install sibling desk_core editable: pip install -e ../desk_core
+]
 
 [project.scripts]
 fetch-sunsirs = "oil_data_ingest.cli:main_sunsirs"
+fetch-jlc-cracks = "oil_data_ingest.cli:main_jlc_cracks"
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -1,0 +1,30 @@
+# JLC China independent-refinery cracks via Bloomberg (Index).
+# Methodology (DES): ex-refinery product after tax − cost of mainstream imported crude.
+# Units: USD/barrel. Daily.
+
+source: jlc
+provider: JLC International Pte Ltd
+via: bloomberg
+field: PX_LAST
+unit: USD/bbl
+
+landing:
+  cracks: data/processed/jlc/cracks.parquet
+
+# First empty store → backfill_days. Later runs → refresh_lookback_days (upsert).
+backfill_days: 365
+refresh_lookback_days: 90
+
+# B-PIPE first; on failure fall back to desktop Terminal (desk_core).
+bloomberg:
+  prefer_bpipe: true
+
+tickers:
+  gasoline:
+    bloomberg: "CHPZIRGC Index"
+    label: "Indie gasoline crack (imported crude)"
+    enabled: true
+  diesel:
+    bloomberg: "CHPZIRDC Index"
+    label: "Indie diesel crack (imported crude)"
+    enabled: true

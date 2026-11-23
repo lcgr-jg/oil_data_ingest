@@ -2,7 +2,9 @@
 
 Desk ingest jobs for public / API energy series. Apps (e.g. `sci_api`) should **read** the landing tables, not own the scrape.
 
-First source: **SunSirs** China spot prices — one multi-product parquet from day one.
+Sources so far:
+- **SunSirs** China spot prices — multi-product parquet
+- **JLC** independent-refinery gasoline/diesel cracks via Bloomberg (`CHPZIRGC` / `CHPZIRDC`)
 
 ## Setup
 
@@ -45,9 +47,44 @@ Upsert key: `(source, product, date)` — re-runs update the same day instead of
 
 Raw HTML (off by default; `--raw` only): `data/raw/sunsirs/{product}/{timestamp}.html`
 
-## Scheduling (later)
+## JLC indie cracks (Bloomberg)
 
-Point Windows Task Scheduler or Prefect at `python scripts/fetch_sunsirs.py` once per weekday. No orchestrator required for the first series.
+Config: `config/jlc_cracks.yaml`. Uses `desk_core.bloomberg` — **B-PIPE first**, falls back to desktop Terminal.
+
+```powershell
+python scripts/fetch_jlc_cracks.py
+python scripts/fetch_jlc_cracks.py --backfill-days 365
+```
+
+Landing table: `data/processed/jlc/cracks.parquet`  
+Upsert key: `(source, ticker, date)`. Empty store → 365d backfill; later runs → 90d refresh.
+
+Requires sibling `desk_core` on `PYTHONPATH` or `pip install -e ../desk_core` (and Bloomberg entitlement).
+
+## Scheduling
+
+Morning runner (SunSirs + JLC):
+
+```text
+scripts\run_morning.bat
+```
+
+**Windows Task Scheduler** (example **09:20** weekdays, before `desk_reports` @ 09:30):
+
+| Field | Value |
+|-------|--------|
+| Program/script | `...\oil_data_ingest\scripts\run_morning.bat` |
+| Start in | `...\oil_data_ingest` |
+| Trigger | Weekly — Mon–Fri |
+
+```powershell
+$bat = (Resolve-Path .\scripts\run_morning.bat).Path
+schtasks /Create /F /TN "oil_data_ingest\morning_weekdays" `
+  /TR "`"$bat`"" /SC WEEKLY /D MON,TUE,WED,THU,FRI /ST 09:20 `
+  /RL LIMITED
+```
+
+Prefer pointing your existing 09:20 task at `run_morning.bat` so cracks refresh with spots.
 
 ## Sharing later
 
@@ -57,9 +94,13 @@ Point Windows Task Scheduler or Prefect at `python scripts/fetch_sunsirs.py` onc
 ## Layout
 
 ```
-config/sunsirs.yaml          # multi-product registry
-oil_data_ingest/sunsirs/     # client, parse, store, pipeline
+config/sunsirs.yaml
+config/jlc_cracks.yaml
+oil_data_ingest/sunsirs/
+oil_data_ingest/jlc/
 scripts/fetch_sunsirs.py
-data/raw/sunsirs/
+scripts/fetch_jlc_cracks.py
+scripts/run_morning.bat
 data/processed/sunsirs/prices.parquet
+data/processed/jlc/cracks.parquet
 ```
